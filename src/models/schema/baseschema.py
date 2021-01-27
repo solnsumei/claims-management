@@ -1,6 +1,6 @@
 from typing import Optional, Any
 from pydantic import BaseModel, validator, Field
-from src.utils.status import Status
+from src.utils.enums import Status
 
 
 class BaseSchema(BaseModel):

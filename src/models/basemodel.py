@@ -1,4 +1,4 @@
-from src.utils.status import Status
+from src.utils.enums import Status
 from slugify import slugify
 from tortoise import fields, models
 

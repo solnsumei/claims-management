@@ -1,12 +1,12 @@
-# FastAPI Starter Template
-Starter template for building REST APIs using FastAPI and tortoise ORM
+# Claims Management App
+App for claims settlement amd management
 
 ### Features
-- JWT Authentication
-- Roles and Permissions
-- Database migrations
-- Routing
-- Test Setup
+- Employee claims management
+- Contractor claims management
+- Departmental claims management
+- Searching and grouping of claims
+- Reminders
 
 ### Built with
 - Python FastAPI
