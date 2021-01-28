@@ -7,7 +7,7 @@ DB_CONFIG = {
         "connections": {"default": settings.DATABASE_URI},
         "apps": {
             "models": {
-                "models": ["src.models"],
+                "models": ["src.models", "aerich.models"],
                 "default_connection": "default"
             }
         }
