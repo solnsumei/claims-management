@@ -1,6 +1,6 @@
 from .baserouter import BaseRouter
 from src.models import Role, RolePydantic
-from src.models.schema.role import RoleSchema
+from src.models.schema.department import RoleSchema
 
 
 router = BaseRouter(
