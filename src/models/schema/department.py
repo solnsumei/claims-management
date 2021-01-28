@@ -1,6 +1,5 @@
-from pydantic import Field
-from .baseschema import StatusSchema
+from .baseschema import NameSchema, Field
 
 
-class DepartmentSchema(StatusSchema):
-    name: str = Field(..., min_length=2, max_length=30)
+class DepartmentSchema(NameSchema):
+    pass
