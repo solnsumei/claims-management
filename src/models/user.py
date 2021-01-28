@@ -1,5 +1,6 @@
 from passlib.context import CryptContext
-from src.models.base.basemodel import ModelWithStatus, fields
+from .base.basemodel import ModelWithStatus, fields
+from src.utils.enums import Role
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -8,7 +9,8 @@ class User(ModelWithStatus):
     email = fields.CharField(max_length=50, unique=True)
     password = fields.CharField(max_length=250)
     is_admin = fields.BooleanField(default=False)
-    role = fields.ForeignKeyField('models.Role', related_name='users', null=True)
+    role = fields.CharEnumField(Role, default=Role.Staff)
+    department = fields.ForeignKeyField('models.Department', related_name='employees', null=True)
 
     @classmethod
     async def find_by_email(cls, email):
