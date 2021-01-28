@@ -13,6 +13,7 @@ class User(ModelWithStatus):
     is_admin = fields.BooleanField(default=False)
     role = fields.CharEnumField(Role, default=Role.Staff)
     department = fields.ForeignKeyField('models.Department', related_name='employees', null=True)
+    uses_default_password = fields.BooleanField(default=True)
 
     @classmethod
     async def find_by_email(cls, email):
