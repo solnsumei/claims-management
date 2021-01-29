@@ -1,6 +1,7 @@
+from fastapi import Depends
 from src.models import UserPydantic
 from src.models.schema.user import AuthSchema
-from src.utils.security import create_token, authenticate
+from src.utils.security import create_token, authenticate, get_current_user
 from .baserouter import BaseRouter
 
 
@@ -19,3 +20,10 @@ async def login_user(auth: AuthSchema):
         "token": token
     }
 
+
+@router.get('/user')
+async def profile(user: dict = Depends(get_current_user)):
+    logged_in_user = await UserPydantic.from_tortoise_orm(user)
+    return {
+        "user": logged_in_user,
+    }
