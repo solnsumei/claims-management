@@ -17,8 +17,6 @@ class Settings:
         dotenv_path = join(dirname(__file__), '../../.env')
         load_dotenv(dotenv_path)
 
-        print(os.environ.get('ENVIRONMENT'))
-
         cls.APP_ENVIRONMENT = os.environ.get('ENVIRONMENT')
         cls.SECRET_KEY = os.environ.get('APP_SECRET')
         cls.PORT = int(os.environ.get('PORT'))

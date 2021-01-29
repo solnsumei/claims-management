@@ -11,5 +11,5 @@ from .claim import Claim
 Tortoise.init_models(["src.models"], "models")
 
 # User serialization
-UserPydantic = pydantic_model_creator(User)
+UserPydantic = pydantic_model_creator(User, exclude=('managed_projects', 'claims', 'projects', 'department'))
 UserWithRelations = pydantic_model_creator(User, name="UserWithRelations")

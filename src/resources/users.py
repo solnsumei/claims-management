@@ -49,7 +49,7 @@ async def update_user(user_id: str, user_schema: UserSchema, auth: User = Depend
 
 
 @router.delete("/{user_id}")
-async def delete_user(user_id: str, auth: Depends(check_admin)):
+async def delete_user(user_id: str, auth: User = Depends(check_admin)):
     if auth.id == user_id:
         raise ForbiddenException(message="You cannot delete yourself")
 
