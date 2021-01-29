@@ -1,10 +1,10 @@
 from src.models import UserPydantic
 from src.models.schema.user import AuthSchema
 from src.utils.security import create_token, authenticate
-from .baserouter import APIRouter
+from .baserouter import BaseRouter
 
 
-router = APIRouter()
+router = BaseRouter()
 
 
 @router.post('/login')
