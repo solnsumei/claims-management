@@ -19,7 +19,7 @@ def add_routers(app, config):
 
     app.include_router(
         users.router,
-        prefix=f"{config.API_URL}/roles",
-        tags=["Roles"],
+        prefix=f"{config.API_URL}/users",
+        tags=["Users"],
         dependencies=[Depends(get_current_user)]
     )
