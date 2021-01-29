@@ -1,5 +1,5 @@
 from fastapi import Depends
-from src.api import auth, users
+from src.resources import auth, users
 from src.utils.security import get_current_user
 
 

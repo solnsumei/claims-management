@@ -26,6 +26,6 @@ class ForbiddenException(HTTPException):
     def __init__(self, message: str = None):
         super().__init__(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail=message or "You do not have access to this resource",
+            detail=message or "You do not have permission to perform this action",
             headers={"WWW-Authenticate": "Bearer"}
         )
