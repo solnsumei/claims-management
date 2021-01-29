@@ -29,7 +29,6 @@ class CrudRouter(BaseRouter):
 
         @self.put("/{item_id}", response_model=response_schema)
         async def update(item_id: str, item: request_schema):
-            print(item.dict())
             updated_item = await model.update_one(item_id, item)
             return await response_schema.from_queryset_single(updated_item)
 

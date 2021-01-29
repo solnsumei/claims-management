@@ -18,6 +18,10 @@ class BaseModel(models.Model):
         return await cls.filter(**kwargs).all()
 
     @classmethod
+    async def find_one_or_none(cls, **kwargs):
+        return await cls.get_or_none(**kwargs)
+
+    @classmethod
     async def find_one(cls, **kwargs):
         return await cls.filter(**kwargs).first()
 
