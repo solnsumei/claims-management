@@ -5,11 +5,11 @@ from fastapi import Depends
 from fastapi.security import HTTPBearer
 from src.config.settings import Settings as Config
 from src.models import User
-from .exceptions import UnauthorisedException
+from .exceptions import UnauthorisedException, ForbiddenException
 
 
-async def authenticate(email: str, password: str):
-    user = await User.find_by_email(email)
+async def authenticate(username: str, password: str):
+    user = await User.find_by_username(username)
 
     if user and User.verify_hash(password, user.password):
         return user
@@ -51,9 +51,20 @@ async def get_current_user(username: str = Depends(check_token)):
     :param username:
     :return: User
     """
-    user = await User.find_by_email(email=username)
+    user = await User.find_by_username(username=username)
     if user is None:
         raise UnauthorisedException("Access token is invalid")
+    return user
+
+
+async def check_admin(user: User = Depends(get_current_user)):
+    """
+    Check if user is an admin
+    :param user:
+    :return: User
+    """
+    if user.role != "Admin" and not user.is_admin:
+        raise ForbiddenException()
     return user
 
 
