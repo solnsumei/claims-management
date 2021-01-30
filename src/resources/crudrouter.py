@@ -2,24 +2,30 @@ from .baserouter import BaseRouter
 
 
 class CrudRouter(BaseRouter):
-    def __init__(self, request_schema, response_schema, model):
+    def __init__(self, request_schema, single_response_schema, response_schema, model):
         super().__init__()
         self.request_schema = request_schema
         self.response_schema = response_schema
         self.model = model
+        self.single_response_schema = single_response_schema
 
     def load_routes(self):
         request_schema = self.request_schema
         response_schema = self.response_schema
         model = self.model
+        single_response_schema = self.single_response_schema
 
         @self.get("/", response_model=list[response_schema])
         async def fetch_all():
             return await response_schema.from_queryset(model.all())
 
-        @self.get("/{item_id}", response_model=response_schema)
+        @self.get("/{item_id}", response_model=single_response_schema or response_schema)
         async def fetch_one(item_id: str):
-            return await response_schema \
+            if single_response_schema is None:
+                return await response_schema \
+                    .from_queryset_single(model.get(id=item_id))
+
+            return await single_response_schema \
                 .from_queryset_single(model.get(id=item_id))
 
         @self.post("/", status_code=201, response_model=response_schema)

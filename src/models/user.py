@@ -36,6 +36,8 @@ class User(ModelWithStatus):
 
     class PydanticMeta:
         exclude = ['password']
+        max_recursion = 0
+        allow_cycles = False
 
 
 

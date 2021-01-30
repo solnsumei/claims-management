@@ -7,3 +7,7 @@ class Department(ModelWithStatus):
 
     class Meta:
         table = 'departments'
+
+    class PydanticMeta:
+        allow_cycles = False
+        max_recursion = 0
