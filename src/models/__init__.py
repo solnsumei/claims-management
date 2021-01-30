@@ -20,3 +20,10 @@ DepartmentPydantic = pydantic_model_creator(Department, name="Department", exclu
 DepartmentWithRelations = pydantic_model_creator(
     Department, name="DepartmentWithRelations"
 )
+
+# Project serialization
+ProjectPydantic = pydantic_model_creator(Project, name="Project", exclude=(
+    'claims', 'manager', 'department', 'contractors'))
+ProjectWithRelations = pydantic_model_creator(
+    Project, name="ProjectWithRelations"
+)
