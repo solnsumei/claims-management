@@ -19,3 +19,7 @@ class Claim(BaseModel):
 
     class Meta:
         table = 'claims'
+
+    class PydanticMeta:
+        allow_cycles = False
+        max_recursion = 0

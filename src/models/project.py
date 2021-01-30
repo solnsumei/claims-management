@@ -13,3 +13,7 @@ class Project(ModelWithStatus):
 
     class Meta:
         table = 'projects'
+
+    class PydanticMeta:
+        allow_cycles = False
+        max_recursion = 0
