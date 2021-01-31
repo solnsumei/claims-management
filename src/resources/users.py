@@ -1,7 +1,7 @@
 from fastapi import Depends
 from .baserouter import BaseRouter
 from src.models import User, UserPydantic
-from src.models.schema.user import UserSchema
+from src.models.schema.user import CreateSchema, UpdateSchema
 from src.utils.security import check_admin
 from src.utils.exceptions import ForbiddenException
 
@@ -25,13 +25,13 @@ async def get_user(user_id: str, auth: User = Depends(check_admin)):
 
 @router.post("/", status_code=201, response_model=UserPydantic,
              dependencies=[Depends(check_admin)])
-async def add_user(user: UserSchema):
+async def add_user(user: CreateSchema):
     new_user = await User.create_one(user)
     return await UserPydantic.from_tortoise_orm(new_user)
 
 
 @router.put("/{user_id}", response_model=UserPydantic)
-async def update_user(user_id: str, user_schema: UserSchema, auth: User = Depends(check_admin)):
+async def update_user(user_id: str, user_schema: UpdateSchema, auth: User = Depends(check_admin)):
     found_user = await User.find_one(id=user_id)
 
     if found_user.is_admin and found_user.id != auth.id:
