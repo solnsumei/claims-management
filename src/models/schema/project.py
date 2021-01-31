@@ -1,6 +1,6 @@
 from typing import Optional
 from pydantic import Field, UUID4
-from .baseschema import NameDescriptionSchema
+from .baseschema import NameDescriptionSchema, StatusSchema
 
 
 class CreateSchema(NameDescriptionSchema):
@@ -11,7 +11,7 @@ class CreateSchema(NameDescriptionSchema):
     department_id: Optional[UUID4]
 
 
-class UpdateSchema(NameDescriptionSchema):
+class UpdateSchema(StatusSchema):
     name: Optional[str] = Field(None, min_length=3, max_length=70, description="Name is required")
     description: Optional[str]
     manager_id: Optional[UUID4]
