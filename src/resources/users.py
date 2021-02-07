@@ -1,9 +1,10 @@
-from fastapi import Depends
+from fastapi import Depends, BackgroundTasks
 from .baserouter import BaseRouter
 from src.models import User, UserPydantic
 from src.models.schema.user import CreateSchema, UpdateSchema
 from src.utils.security import check_admin
 from src.utils.exceptions import ForbiddenException
+from src.services.mail_service import mail_service, create_welcome_message
 
 
 router = BaseRouter()
@@ -25,8 +26,18 @@ async def get_user(user_id: str, auth: User = Depends(check_admin)):
 
 @router.post("/", status_code=201, response_model=UserPydantic,
              dependencies=[Depends(check_admin)])
-async def add_user(user: CreateSchema):
+async def add_user(user: CreateSchema, background_tasks: BackgroundTasks):
+    password = user.password
+    user.password = User.generate_hash(password)
     new_user = await User.create_one(user)
+
+    message = create_welcome_message(
+        name=user.name,
+        email=[user.email],
+        password=password,
+    )
+
+    background_tasks.add_task(mail_service.send_message, message)
     return await UserPydantic.from_tortoise_orm(new_user)
 
 
