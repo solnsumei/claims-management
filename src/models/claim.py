@@ -10,6 +10,7 @@ class Claim(BaseModel):
     amount = fields.DecimalField(decimal_places=2, max_digits=12)
     approval_date = fields.DateField(null=True)
     payment_date = fields.DateField(null=True)
+    due_date = fields.DateField(null=True)
     file_url = fields.CharField(max_length=255, unique=True)
     user = fields.ForeignKeyField('models.User', related_name='claims')
     project = fields.ForeignKeyField('models.Project', related_name='claims', null=True)

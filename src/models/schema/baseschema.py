@@ -11,7 +11,6 @@ class BaseSchema(BaseModel):
             if striped == "":
                 return None
             return striped
-
         return v
 
 
@@ -23,5 +22,9 @@ class NameSchema(StatusSchema):
     name: str = Field(..., min_length=3, max_length=70, description="Name is required")
 
 
-class NameDescriptionSchema(NameSchema):
+class DescriptionSchema(NameSchema):
     description: str
+
+
+class NameDescriptionSchema(NameSchema, DescriptionSchema):
+    pass
