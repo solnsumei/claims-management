@@ -1,4 +1,4 @@
-from .baseschema import NameSchema, Field
+from .baseschema import NameSchema
 
 
 class DepartmentSchema(NameSchema):
