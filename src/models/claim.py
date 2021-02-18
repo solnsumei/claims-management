@@ -8,7 +8,7 @@ class Claim(BaseModel):
     invoice_no = fields.CharField(max_length=12, unique=True)
     description = fields.TextField()
     amount = fields.DecimalField(decimal_places=2, max_digits=12)
-    approval_date = fields.DateField(null=True)
+    approval_date = fields.DatetimeField(null=True)
     payment_date = fields.DateField(null=True)
     due_date = fields.DateField(null=True)
     file_url = fields.CharField(max_length=255, null=True)
