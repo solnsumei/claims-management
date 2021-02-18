@@ -6,12 +6,15 @@ class Status(str, Enum):
     INACTIVE = "inactive"
 
 
-class InvoiceStatus(str, Enum):
-    New = "New"
-    Pending = "Pending"
+class InvoiceUpdateAction(str, Enum):
     Approved = "Approved"
     Paid = "Paid"
     Cancelled = "Cancelled"
+
+
+class InvoiceStatus(InvoiceUpdateAction):
+    New = "New"
+    Pending = "Pending"
 
 
 class Role(str, Enum):
