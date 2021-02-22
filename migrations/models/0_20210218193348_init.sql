@@ -45,18 +45,18 @@ CREATE TABLE IF NOT EXISTS `claims` (
     `invoice_no` VARCHAR(12) NOT NULL UNIQUE,
     `description` LONGTEXT NOT NULL,
     `amount` DECIMAL(12,2) NOT NULL,
-    `approval_date` DATE,
+    `approval_date` DATETIME(6),
     `payment_date` DATE,
     `due_date` DATE,
     `file_url` VARCHAR(255),
     `status` VARCHAR(9) NOT NULL  COMMENT 'New: New\nPending: Pending\nApproved: Approved\nPaid: Paid\nCancelled: Cancelled' DEFAULT 'New',
     `remark` LONGTEXT,
-    `user_id` CHAR(36) NOT NULL,
-    `department_id` CHAR(36),
     `project_id` CHAR(36),
-    CONSTRAINT `fk_claims_users_77a83080` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+    `department_id` CHAR(36),
+    `user_id` CHAR(36) NOT NULL,
+    CONSTRAINT `fk_claims_projects_652d5db7` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`) ON DELETE CASCADE,
     CONSTRAINT `fk_claims_departme_d76e8ead` FOREIGN KEY (`department_id`) REFERENCES `departments` (`id`) ON DELETE CASCADE,
-    CONSTRAINT `fk_claims_projects_652d5db7` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`) ON DELETE CASCADE
+    CONSTRAINT `fk_claims_users_77a83080` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) CHARACTER SET utf8mb4;
 CREATE TABLE IF NOT EXISTS `aerich` (
     `id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,

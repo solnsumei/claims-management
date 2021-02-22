@@ -12,9 +12,12 @@ class InvoiceUpdateAction(str, Enum):
     Cancelled = "Cancelled"
 
 
-class InvoiceStatus(InvoiceUpdateAction):
+class InvoiceStatus(str, Enum):
     New = "New"
     Pending = "Pending"
+    Approved = "Approved"
+    Paid = "Paid"
+    Cancelled = "Cancelled"
 
 
 class Role(str, Enum):

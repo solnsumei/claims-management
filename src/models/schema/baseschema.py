@@ -26,5 +26,5 @@ class DescriptionSchema(NameSchema):
     description: str
 
 
-class NameDescriptionSchema(NameSchema, DescriptionSchema):
-    pass
+class NameDescriptionSchema(NameSchema):
+    description: str

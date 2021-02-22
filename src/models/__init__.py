@@ -27,3 +27,10 @@ ProjectPydantic = pydantic_model_creator(Project, name="Project", exclude=(
 ProjectWithRelations = pydantic_model_creator(
     Project, name="ProjectWithRelations"
 )
+
+# Claim serialization
+ClaimPydantic = pydantic_model_creator(Claim, name="Claim", exclude=(
+    'project', 'manager', 'department', 'contractors'))
+ClaimWithRelations = pydantic_model_creator(
+    Claim, name="ClaimWithRelations"
+)
