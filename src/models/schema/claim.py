@@ -19,4 +19,5 @@ class CreateSchema(DescriptionSchema):
 class UpdateSchema(BaseSchema):
     status: InvoiceUpdateAction
     payment_date: Optional[date]
-    remark: Optional[str] = Field(None, min_length=3, max_length=120, description="Add a valid remark")
+    remark: Optional[str] = Field(
+        None, min_length=3, max_length=120, description="Add a valid remark")
