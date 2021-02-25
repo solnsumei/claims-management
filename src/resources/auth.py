@@ -11,7 +11,11 @@ router = BaseRouter()
 @router.post('/login')
 async def login_user(auth: AuthSchema):
     user = await authenticate(auth.username, auth.password)
-    token = create_token({"sub": user.username})
+    token = create_token({
+        "username": user.username,
+        "isAdmin": user.is_admin,
+        'role': user.role
+    })
 
     user_pydantic = await UserPydantic.from_tortoise_orm(user)
 

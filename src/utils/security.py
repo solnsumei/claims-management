@@ -37,7 +37,7 @@ def check_token(auth_token=Depends(HTTPBearer(
             algorithms=[Config.ALGORITHM]
         )
 
-        username: str = payload.get("sub")
+        username: str = payload.get("username")
         if username is None:
             raise JWTError
     except JWTError:

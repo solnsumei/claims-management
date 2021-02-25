@@ -1,5 +1,6 @@
 import uvicorn
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from src.config.settings import Settings
 from src.config.db import init_db
 from src.routes import add_routers
@@ -7,6 +8,19 @@ from src.routes import add_routers
 
 def create_app(_config: Settings):
     _app = FastAPI()
+
+    origins = [
+        "http://localhost",
+        "http://localhost:3000",
+    ]
+
+    _app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
     @_app.get("/")
     def index():
