@@ -7,6 +7,7 @@ class Department(ModelWithStatus):
 
     class Meta:
         table = 'departments'
+        ordering = ['created_at', 'name']
 
     class PydanticMeta:
         allow_cycles = False
