@@ -12,9 +12,10 @@ class Claim(BaseModel):
     payment_date = fields.DateField(null=True)
     due_date = fields.DateField(null=True)
     file_url = fields.CharField(max_length=255, null=True)
-    user = fields.ForeignKeyField('models.User', related_name='claims')
-    project = fields.ForeignKeyField('models.Project', related_name='claims', null=True)
-    department = fields.ForeignKeyField('models.Department', related_name='claims', null=True)
+    user = fields.ForeignKeyField('models.User', related_name='claims', on_delete=fields.RESTRICT)
+    project = fields.ForeignKeyField('models.Project', related_name='claims', null=True, on_delete=fields.SET_NULL)
+    department = fields.ForeignKeyField(
+        'models.Department', related_name='claims', null=True, on_delete=fields.SET_NULL)
     status = fields.CharEnumField(InvoiceStatus, default=InvoiceStatus.New)
     remark = fields.TextField(null=True)
 

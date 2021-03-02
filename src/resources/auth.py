@@ -3,6 +3,7 @@ from src.models import UserPydantic
 from src.models.schema.user import AuthSchema
 from src.utils.security import create_token, authenticate, get_current_user
 from .baserouter import BaseRouter
+from src.utils.enums import EmployeeRole
 
 
 router = BaseRouter()
@@ -31,3 +32,8 @@ async def profile(user: dict = Depends(get_current_user)):
     return {
         "user": logged_in_user,
     }
+
+
+@router.get('/roles', dependencies=[Depends(get_current_user)])
+async def employee_roles():
+    return list(EmployeeRole)

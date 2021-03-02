@@ -25,3 +25,9 @@ class Role(str, Enum):
     Manager = "Manager"
     Staff = "Staff"
     Contractor = "Contractor"
+
+
+class EmployeeRole(str, Enum):
+    Admin = "Admin"
+    Manager = "Manager"
+    Staff = "Staff"

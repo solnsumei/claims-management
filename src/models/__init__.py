@@ -12,6 +12,7 @@ Tortoise.init_models(["src.models"], "models")
 
 # User serialization
 UserPydantic = pydantic_model_creator(User, exclude=('managed_projects', 'claims', 'projects', 'department'))
+UserWithDepartment = pydantic_model_creator(User, name="UserWithDepartment", exclude=('managed_projects', 'claims', 'projects'))
 UserWithRelations = pydantic_model_creator(User, name="UserWithRelations")
 
 

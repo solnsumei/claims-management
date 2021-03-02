@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS `users` (
     `role` VARCHAR(10) NOT NULL  COMMENT 'Admin: Admin\nManager: Manager\nStaff: Staff\nContractor: Contractor' DEFAULT 'Staff',
     `uses_default_password` BOOL NOT NULL  DEFAULT 1,
     `department_id` CHAR(36),
-    CONSTRAINT `fk_users_departme_31a8aa1c` FOREIGN KEY (`department_id`) REFERENCES `departments` (`id`) ON DELETE CASCADE
+    CONSTRAINT `fk_users_departme_31a8aa1c` FOREIGN KEY (`department_id`) REFERENCES `departments` (`id`) ON DELETE SET NULL
 ) CHARACTER SET utf8mb4;
 CREATE TABLE IF NOT EXISTS `projects` (
     `id` CHAR(36) NOT NULL  PRIMARY KEY,
@@ -31,10 +31,10 @@ CREATE TABLE IF NOT EXISTS `projects` (
     `description` LONGTEXT NOT NULL,
     `budget` DECIMAL(12,2) NOT NULL,
     `duration` INT NOT NULL,
-    `manager_id` CHAR(36) NOT NULL,
     `department_id` CHAR(36),
-    CONSTRAINT `fk_projects_users_20418afb` FOREIGN KEY (`manager_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-    CONSTRAINT `fk_projects_departme_30001828` FOREIGN KEY (`department_id`) REFERENCES `departments` (`id`) ON DELETE CASCADE
+    `manager_id` CHAR(36) NOT NULL,
+    CONSTRAINT `fk_projects_departme_30001828` FOREIGN KEY (`department_id`) REFERENCES `departments` (`id`) ON DELETE SET NULL,
+    CONSTRAINT `fk_projects_users_20418afb` FOREIGN KEY (`manager_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT
 ) CHARACTER SET utf8mb4;
 CREATE TABLE IF NOT EXISTS `claims` (
     `id` CHAR(36) NOT NULL  PRIMARY KEY,
@@ -51,12 +51,12 @@ CREATE TABLE IF NOT EXISTS `claims` (
     `file_url` VARCHAR(255),
     `status` VARCHAR(9) NOT NULL  COMMENT 'New: New\nPending: Pending\nApproved: Approved\nPaid: Paid\nCancelled: Cancelled' DEFAULT 'New',
     `remark` LONGTEXT,
-    `project_id` CHAR(36),
-    `department_id` CHAR(36),
     `user_id` CHAR(36) NOT NULL,
-    CONSTRAINT `fk_claims_projects_652d5db7` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`) ON DELETE CASCADE,
-    CONSTRAINT `fk_claims_departme_d76e8ead` FOREIGN KEY (`department_id`) REFERENCES `departments` (`id`) ON DELETE CASCADE,
-    CONSTRAINT `fk_claims_users_77a83080` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+    `department_id` CHAR(36),
+    `project_id` CHAR(36),
+    CONSTRAINT `fk_claims_users_77a83080` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT,
+    CONSTRAINT `fk_claims_departme_d76e8ead` FOREIGN KEY (`department_id`) REFERENCES `departments` (`id`) ON DELETE SET NULL,
+    CONSTRAINT `fk_claims_projects_652d5db7` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`) ON DELETE SET NULL
 ) CHARACTER SET utf8mb4;
 CREATE TABLE IF NOT EXISTS `aerich` (
     `id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,

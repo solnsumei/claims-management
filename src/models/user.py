@@ -12,7 +12,8 @@ class User(ModelWithStatus):
     password = fields.CharField(max_length=250)
     is_admin = fields.BooleanField(default=False)
     role = fields.CharEnumField(Role, default=Role.Staff)
-    department = fields.ForeignKeyField('models.Department', related_name='employees', null=True)
+    department = fields.ForeignKeyField(
+        'models.Department', related_name='employees', null=True, on_delete=fields.SET_NULL)
     uses_default_password = fields.BooleanField(default=True)
 
     @classmethod
@@ -33,6 +34,7 @@ class User(ModelWithStatus):
 
     class Meta:
         table = "users"
+        ordering = ['created_at', 'name']
 
     class PydanticMeta:
         exclude = ['password']

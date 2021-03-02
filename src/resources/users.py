@@ -1,35 +1,42 @@
 from fastapi import Depends, BackgroundTasks
 from .baserouter import BaseRouter
-from src.models import User, UserPydantic
+from src.models import User, UserWithDepartment, UserWithRelations
 from src.models.schema.user import CreateSchema, UpdateSchema
 from src.utils.security import check_admin
 from src.utils.exceptions import ForbiddenException
 from src.services.mail_service import mail_service, create_welcome_message
+from src.utils.enums import EmployeeRole
 
 
 router = BaseRouter()
 
 
-@router.get("/", response_model=list[UserPydantic])
-async def fetch_all_staff(auth: User = Depends(check_admin)):
+@router.get("/", response_model=list[UserWithDepartment])
+async def fetch_all_staff(contractors: bool = False, auth: User = Depends(check_admin)):
+    employees_list = list(EmployeeRole)
     if auth.is_admin:
-        return await UserPydantic.from_queryset(User.all())
-    return await UserPydantic.from_queryset(User.find_by(is_admin=False))
+        if contractors:
+            return await User.find_by("department", role__not_in=employees_list)
+        return await User.find_by("department", role__in=employees_list)
+    return await User.find_by("department", is_admin=False)
 
 
-@router.get("/{user_id}", response_model=UserPydantic)
+@router.get("/{user_id}", response_model=UserWithRelations)
 async def get_user(user_id: str, auth: User = Depends(check_admin)):
     if auth.is_admin:
-        return await UserPydantic.from_queryset_single(User.get(id=user_id))
-    return await UserPydantic.from_queryset_single(User.get(is_admin=False, id=user_id))
+        return await UserWithRelations.from_queryset_single(User.get(id=user_id))
+    return await UserWithRelations.from_queryset_single(User.get(is_admin=False, id=user_id))
 
 
-@router.post("/", status_code=201, response_model=UserPydantic,
+@router.post("/", status_code=201, response_model=UserWithDepartment,
              dependencies=[Depends(check_admin)])
 async def add_user(user: CreateSchema, background_tasks: BackgroundTasks):
     password = user.password
     user.password = User.generate_hash(password)
     new_user = await User.create_one(user)
+
+    if user.project_id is not None:
+        new_user.projects.add(project_id=user.project_id)
 
     message = create_welcome_message(
         name=user.name,
@@ -38,10 +45,10 @@ async def add_user(user: CreateSchema, background_tasks: BackgroundTasks):
     )
 
     background_tasks.add_task(mail_service.send_message, message)
-    return await UserPydantic.from_tortoise_orm(new_user)
+    return await UserWithDepartment.from_tortoise_orm(new_user)
 
 
-@router.put("/{user_id}", response_model=UserPydantic)
+@router.put("/{user_id}", response_model=UserWithDepartment)
 async def update_user(user_id: str, user_schema: UpdateSchema, auth: User = Depends(check_admin)):
     found_user = await User.find_one(id=user_id)
 
@@ -50,13 +57,13 @@ async def update_user(user_id: str, user_schema: UpdateSchema, auth: User = Depe
 
     if auth.is_admin:
         updated_item = await User.update_one(user_id, user_schema)
-        return await UserPydantic.from_queryset_single(updated_item)
+        return await UserWithDepartment.from_queryset_single(updated_item)
 
     if found_user.role == "Admin":
         raise ForbiddenException(message="You cannot update an admin")
 
     updated_item = await User.update_one(user_id, user_schema)
-    return await UserPydantic.from_queryset_single(updated_item)
+    return await UserWithDepartment.from_queryset_single(updated_item)
 
 
 @router.delete("/{user_id}")

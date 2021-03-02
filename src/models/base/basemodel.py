@@ -14,7 +14,9 @@ class BaseModel(models.Model):
         return await cls.create(**item.dict())
 
     @classmethod
-    async def find_by(cls, **kwargs):
+    async def find_by(cls, *args, **kwargs):
+        if args is not None:
+            return await cls.filter(**kwargs).prefetch_related(*args).all()
         return await cls.filter(**kwargs).all()
 
     @classmethod
@@ -22,7 +24,9 @@ class BaseModel(models.Model):
         return await cls.get_or_none(**kwargs)
 
     @classmethod
-    async def find_one(cls, **kwargs):
+    async def find_one(cls, *args, **kwargs):
+        if args is not None:
+            return await cls.filter(**kwargs).prefetch_related(*args).first()
         return await cls.filter(**kwargs).first()
 
     @classmethod
