@@ -1,6 +1,7 @@
-from typing import Optional
+from typing import Optional, List
 from pydantic import Field, UUID4
-from .baseschema import NameDescriptionSchema, StatusSchema
+from .baseschema import BaseSchema, NameDescriptionSchema, StatusSchema
+from src.utils.enums import TeamAction
 
 
 class CreateSchema(NameDescriptionSchema):
@@ -18,3 +19,8 @@ class UpdateSchema(StatusSchema):
     budget: Optional[int] = Field(None, gt=0)
     duration: Optional[int] = Field(None, gt=0)
     department_id: Optional[UUID4]
+
+
+class AttachUsersSchema(BaseSchema):
+    user_ids: List[UUID4]
+    action: TeamAction

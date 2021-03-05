@@ -35,9 +35,6 @@ async def add_user(user: CreateSchema, background_tasks: BackgroundTasks):
     user.password = User.generate_hash(password)
     new_user = await User.create_one(user)
 
-    if user.project_id is not None:
-        new_user.projects.add(project_id=user.project_id)
-
     message = create_welcome_message(
         name=user.name,
         email=[user.email],
@@ -51,6 +48,9 @@ async def add_user(user: CreateSchema, background_tasks: BackgroundTasks):
 @router.put("/{user_id}", response_model=UserWithDepartment)
 async def update_user(user_id: str, user_schema: UpdateSchema, auth: User = Depends(check_admin)):
     found_user = await User.find_one(id=user_id)
+
+    if user_schema.password is not None:
+        user_schema.password = User.generate_hash(user_schema.password)
 
     if found_user.is_admin and found_user.id != auth.id:
         raise ForbiddenException(message="You cannot update an admin")

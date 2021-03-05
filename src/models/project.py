@@ -10,7 +10,7 @@ class Project(ModelWithStatus):
         'models.Department', related_name='projects', null=True, on_delete=fields.SET_NULL)
     budget = fields.DecimalField(decimal_places=2, max_digits=12)
     duration = fields.IntField()
-    contractors = fields.ManyToManyField('models.User', related_name='projects', null=True)
+    team = fields.ManyToManyField('models.User', related_name='projects', null=True)
 
     class Meta:
         table = 'projects'

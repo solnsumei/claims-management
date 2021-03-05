@@ -15,7 +15,6 @@ class CreateSchema(NameSchema):
     password: str = Field(..., min_length=8, max_length=70)
     role: Optional[Role] = Field(Role.Staff)
     department_id: Optional[UUID4]
-    project_id: Optional[UUID4]
 
 
 class UpdateSchema(StatusSchema):
@@ -24,4 +23,3 @@ class UpdateSchema(StatusSchema):
     password: str = Field(None, min_length=8, max_length=70)
     role: Optional[Role]
     department_id: Optional[UUID4]
-    project_id: Optional[UUID4]

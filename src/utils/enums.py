@@ -31,3 +31,8 @@ class EmployeeRole(str, Enum):
     Admin = "Admin"
     Manager = "Manager"
     Staff = "Staff"
+
+
+class TeamAction(str, Enum):
+    ADD = "add"
+    REMOVE = "remove"
