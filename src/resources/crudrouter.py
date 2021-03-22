@@ -1,3 +1,4 @@
+from typing import List
 from .baserouter import BaseRouter
 
 
@@ -25,7 +26,7 @@ class CrudRouter(BaseRouter):
         single_response_schema = self.single_response_schema
         update_schema = self.update_schema
 
-        @self.get("/", response_model=list[response_schema])
+        @self.get("/", response_model=List[response_schema])
         async def fetch_all():
             return await response_schema.from_queryset(model.all())
 

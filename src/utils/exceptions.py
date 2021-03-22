@@ -38,9 +38,24 @@ class UnProcessableException(HTTPException):
         message -- explanation of the error
     """
 
-    def __init__(self, message: str = None):
+    def __init__(self, message=None):
         super().__init__(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail=message or "This request cannot be processed",
+            headers={"WWW-Authenticate": "Bearer"}
+        )
+
+
+class NotFoundException(HTTPException):
+    """Exception raised for authorization errors.
+
+    Attributes:
+        message -- explanation of the error
+    """
+
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Item not found",
             headers={"WWW-Authenticate": "Bearer"}
         )

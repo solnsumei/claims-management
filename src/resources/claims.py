@@ -1,6 +1,4 @@
 from PIL import Image
-import shutil
-from pathlib import Path
 from datetime import datetime
 from fastapi import Depends, BackgroundTasks, File, UploadFile
 from .baserouter import BaseRouter

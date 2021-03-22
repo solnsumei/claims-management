@@ -9,6 +9,12 @@ class AuthSchema(BaseSchema):
     password: str
 
 
+class ChangePasswordSchema(BaseSchema):
+    old_password: Optional[str]
+    password: str = Field(..., min_length=8, max_length=70)
+    password_confirmation: str = Field(..., min_length=8, max_length=70)
+
+
 class CreateSchema(NameSchema):
     email: EmailStr
     username: str = Field(..., min_length=3, max_length=30)
