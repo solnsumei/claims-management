@@ -40,6 +40,7 @@ async def upload_claim_file(
         raise UnProcessableException("Claims cannot be updated")
 
     try:
+        # Todo - Convert to background task to convert file to pdf if it comes in other formats
         basewidth = 900
         with Image.open(file.file) as img:
             file_url = f"{upload_folder}/{claim_id}.{img.format}"
@@ -60,7 +61,6 @@ async def upload_claim_file(
         file.file.close()
 
     # Todo - Add background task to send mail to respective admins
-
     # message = create_welcome_message(
     #     name=user.name,
     #     email=[user.email],
@@ -113,7 +113,6 @@ async def update_claim(claim_id: str, claim: UpdateSchema):
 
 @router.delete("/{claim_id}", dependencies=[Depends(check_admin)])
 async def delete_claim(claim_id: str):
-
     claim = await Claim.find_one(id=claim_id)
 
     if claim.status not in deletable_statuses:

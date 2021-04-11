@@ -52,7 +52,7 @@ async def change_password(
     auth.password = User.generate_hash(passwords.password)
 
     if update is False:
-        auth.uses_default_password = True
+        auth.uses_default_password = False
     await auth.save()
 
     await auth.refresh_from_db(fields=['uses_default_password', 'password'])
