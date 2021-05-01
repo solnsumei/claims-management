@@ -1,8 +1,10 @@
 aerich==0.4.4
+aiofiles==0.6.0
 aiomysql==0.0.21
 aioredis==1.3.1
 aiosmtplib==1.1.4
 aiosqlite==0.16.0
+appscript==1.1.2
 async-timeout==3.0.1
 bcrypt==3.2.0
 blinker==1.4
@@ -11,6 +13,7 @@ cffi==1.14.4
 click==7.1.2
 ddlparse==1.9.0
 dnspython==2.0.0
+docx2pdf==0.1.7
 ecdsa==0.14.1
 email-validator==1.1.2
 fakeredis==1.4.5
@@ -21,10 +24,14 @@ hiredis==1.1.0
 httpcore==0.12.3
 httpx==0.16.1
 idna==2.10
+img2pdf==0.4.0
 iso8601==0.1.13
 Jinja2==2.11.3
+lxml==4.6.3
 MarkupSafe==1.1.1
 passlib==1.7.4
+pikepdf==2.11.4
+Pillow==8.1.0
 pyasn1==0.4.8
 pycparser==2.20
 pydantic==1.7.3
@@ -45,6 +52,6 @@ sortedcontainers==2.3.0
 starlette==0.13.6
 text-unidecode==1.3
 tortoise-orm==0.16.20
+tqdm==4.60.0
 typing-extensions==3.7.4.3
 uvicorn==0.13.0
-Pillow~=8.1.0

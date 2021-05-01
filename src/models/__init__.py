@@ -12,7 +12,7 @@ Tortoise.init_models(["src.models"], "models")
 
 # User serialization
 UserPydantic = pydantic_model_creator(User, exclude=('managed_projects', 'claims', 'projects', 'department'))
-UserWithDepartment = pydantic_model_creator(User, name="UserWithDepartment", exclude=('managed_projects', 'claims', 'projects'))
+UserWithDepartment = pydantic_model_creator(User, name="UserWithDepartment", exclude=('claims',))
 UserWithRelations = pydantic_model_creator(User, name="UserWithRelations")
 
 
@@ -24,14 +24,15 @@ DepartmentWithRelations = pydantic_model_creator(
 
 # Project serialization
 ProjectPydantic = pydantic_model_creator(Project, name="Project", exclude=(
-    'claims', 'manager', 'department', 'contractors'))
+    'claims', 'manager', 'department', 'team'))
 ProjectWithRelations = pydantic_model_creator(
     Project, name="ProjectWithRelations"
 )
+ProjectDefault = pydantic_model_creator(Project, name="ProjectDefault", exclude=('budget', 'claims', 'team'))
 
 # Claim serialization
 ClaimPydantic = pydantic_model_creator(Claim, name="Claim", exclude=(
-    'project', 'manager', 'department', 'contractors'))
+    'project', 'department', 'user'))
 ClaimWithRelations = pydantic_model_creator(
     Claim, name="ClaimWithRelations"
 )

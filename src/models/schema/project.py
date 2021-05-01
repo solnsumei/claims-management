@@ -24,3 +24,4 @@ class UpdateSchema(StatusSchema):
 class AttachUsersSchema(BaseSchema):
     user_ids: List[UUID4]
     action: TeamAction
+

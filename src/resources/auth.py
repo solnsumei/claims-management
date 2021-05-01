@@ -1,5 +1,5 @@
 from fastapi import Depends
-from src.models import UserPydantic, User
+from src.models import User, UserWithDepartment
 from src.models.schema.user import AuthSchema, ChangePasswordSchema
 from src.utils.security import create_token, authenticate, get_current_user
 from .baserouter import BaseRouter
@@ -19,7 +19,7 @@ async def login_user(auth: AuthSchema):
         'role': user.role
     })
 
-    user_pydantic = await UserPydantic.from_tortoise_orm(user)
+    user_pydantic = await UserWithDepartment.from_tortoise_orm(user)
 
     return {
         "user": user_pydantic,
@@ -28,10 +28,10 @@ async def login_user(auth: AuthSchema):
 
 
 @router.get('/user')
-async def profile(user: dict = Depends(get_current_user)):
-    logged_in_user = await UserPydantic.from_tortoise_orm(user)
+async def profile(logged_in_user: dict = Depends(get_current_user)):
+    user = await UserWithDepartment.from_tortoise_orm(logged_in_user)
     return {
-        "user": logged_in_user,
+        "user": user,
     }
 
 
@@ -56,7 +56,7 @@ async def change_password(
     await auth.save()
 
     await auth.refresh_from_db(fields=['uses_default_password', 'password'])
-    return await UserPydantic.from_tortoise_orm(auth)
+    return await UserWithDepartment.from_tortoise_orm(auth)
 
 
 @router.get('/roles', dependencies=[Depends(get_current_user)])

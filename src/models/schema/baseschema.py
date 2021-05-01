@@ -22,7 +22,7 @@ class NameSchema(StatusSchema):
     name: str = Field(..., min_length=3, max_length=70, description="Name is required")
 
 
-class DescriptionSchema(NameSchema):
+class DescriptionSchema(BaseSchema):
     description: str
 
 

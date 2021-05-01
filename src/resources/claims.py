@@ -1,3 +1,7 @@
+import os
+import img2pdf
+import docx2pdf
+import aiofiles
 from PIL import Image
 from datetime import datetime
 from fastapi import Depends, BackgroundTasks, File, UploadFile
@@ -12,13 +16,15 @@ from src.services.mail_service import mail_service, create_welcome_message
 
 
 router = BaseRouter()
+image_extensions = [".jpg", ".jpeg"]
+docs_extensions = [".doc", ".docx"]
 
 
 @router.get("/")
 async def fetch_all_claims(auth: User = Depends(get_current_user)):
-    if auth.is_admin:
+    if auth.is_admin or auth.role == "Admin":
         return await ClaimWithRelations.from_queryset(Claim.all())
-    return await ClaimPydantic.from_queryset(Claim.get(user_id=auth.id))
+    return await ClaimWithRelations.from_queryset(Claim.filter(user_id=auth.id))
 
 
 @router.get("/{claim_id}", response_model=ClaimWithRelations)
@@ -41,18 +47,19 @@ async def upload_claim_file(
 
     try:
         # Todo - Convert to background task to convert file to pdf if it comes in other formats
-        basewidth = 900
-        with Image.open(file.file) as img:
-            file_url = f"{upload_folder}/{claim_id}.{img.format}"
+        file_url = f"{upload_folder}/{claim.claim_id}.pdf"
 
-            if img.size[0] > basewidth:
-                w_percent = (basewidth / float(img.size[0]))
-                h_size = int((float(img.size[1]) * float(w_percent)))
+        _, file_extension = os.path.splitext(file.filename)
 
-                img.resize((basewidth, h_size), Image.ANTIALIAS).save(file_url)
-            img.save(file_url)
-            claim.file_url = file_url
-
+        async with aiofiles.open(file_url, "wb") as f:
+            content = await file.read()
+            if file_extension in image_extensions:
+                await f.write(img2pdf.convert(content))
+            elif file_extension in docs_extensions:
+                await f.write(docx2pdf.convert(content))
+            else:
+                await f.write(content)
+        claim.file_url = file_url
         claim.status = InvoiceStatus.Pending
         await claim.save()
     except Exception:
@@ -78,7 +85,7 @@ async def add_claim(
 
     claim.user_id = auth.id
     if auth.department is not None:
-        claim.department_id = auth.department.id
+        claim.department_id = auth.department_id
 
     claims_no = "CLM-101"
 
