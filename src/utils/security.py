@@ -5,6 +5,7 @@ from fastapi import Depends
 from fastapi.security import HTTPBearer
 from src.config.settings import Settings as Config
 from src.models import User
+from src.utils.enums import Role
 from .exceptions import UnauthorisedException, ForbiddenException
 
 
@@ -57,13 +58,24 @@ async def get_current_user(username: str = Depends(check_token)):
     return user
 
 
+async def check_admin_or_manager(user: User = Depends(get_current_user)):
+    """
+    Check if user is an admin
+    :param user:
+    :return: User
+    """
+    if user.role != Role.Manager and user.role != Role.Admin and not user.is_admin:
+        raise ForbiddenException()
+    return user
+
+
 async def check_admin(user: User = Depends(get_current_user)):
     """
     Check if user is an admin
     :param user:
     :return: User
     """
-    if user.role != "Admin" and not user.is_admin:
+    if user.role != Role.Admin.value and not user.is_admin:
         raise ForbiddenException()
     return user
 

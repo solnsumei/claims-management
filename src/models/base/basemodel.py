@@ -16,8 +16,8 @@ class BaseModel(models.Model):
     @classmethod
     async def find_by(cls, *args, **kwargs):
         if args is not None:
-            return await cls.filter(**kwargs).prefetch_related(*args).all()
-        return await cls.filter(**kwargs).all()
+            return await cls.filter(**kwargs).prefetch_related(*args)
+        return await cls.filter(**kwargs)
 
     @classmethod
     async def find_one_or_none(cls, **kwargs):

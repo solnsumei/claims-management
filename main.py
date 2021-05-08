@@ -4,6 +4,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from src.config.settings import Settings
 from src.config.db import init_db
 from src.routes import add_routers
@@ -45,6 +46,8 @@ config = Settings.load_config()
 
 # Create app
 app = create_app(config)
+
+app.mount('/invoices', StaticFiles(directory="invoices"), name="static")
 
 # Initialize database
 init_db(app)

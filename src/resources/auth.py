@@ -27,14 +27,6 @@ async def login_user(auth: AuthSchema):
     }
 
 
-@router.get('/user')
-async def profile(logged_in_user: dict = Depends(get_current_user)):
-    user = await UserWithDepartment.from_tortoise_orm(logged_in_user)
-    return {
-        "user": user,
-    }
-
-
 @router.post('/change-password')
 async def change_password(
         passwords: ChangePasswordSchema,

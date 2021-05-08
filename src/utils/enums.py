@@ -8,6 +8,7 @@ class Status(str, Enum):
 
 class InvoiceUpdateAction(str, Enum):
     Approved = "Approved"
+    Initial_Approval = "Initial Approval"
     Paid = "Paid"
     Cancelled = "Cancelled"
 
@@ -15,6 +16,7 @@ class InvoiceUpdateAction(str, Enum):
 class InvoiceStatus(str, Enum):
     New = "New"
     Pending = "Pending"
+    Initial_Approval = "Initial Approval"
     Approved = "Approved"
     Paid = "Paid"
     Cancelled = "Cancelled"

@@ -3,7 +3,6 @@ from src.utils.enums import InvoiceStatus
 
 
 class Claim(BaseModel):
-    title = fields.CharField(max_length=100)
     claim_id = fields.CharField(max_length=20, unique=True)
     invoice_no = fields.CharField(max_length=12, unique=True)
     description = fields.TextField()
