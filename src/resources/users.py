@@ -42,6 +42,24 @@ async def add_user(user: CreateSchema, background_tasks: BackgroundTasks):
     return await UserWithDepartment.from_tortoise_orm(new_user)
 
 
+@router.put("/{user_id}", response_model=UserWithDepartment)
+async def update_user(user_id: str, user_schema: UpdateSchema, auth: User = Depends(check_admin)):
+    found_user = await User.find_one(id=user_id)
+
+    if found_user.is_admin and found_user.id != auth.id:
+        raise ForbiddenException(message="You cannot update an admin")
+
+    if auth.is_admin:
+        updated_item = await User.update_one(user_id, user_schema)
+        return await UserWithDepartment.from_queryset_single(updated_item)
+
+    if found_user.role == "Admin":
+        raise ForbiddenException(message="You cannot update an admin")
+
+    updated_item = await User.update_one(user_id, user_schema)
+    return await UserWithDepartment.from_queryset_single(updated_item)
+
+
 @router.delete("/{user_id}")
 async def delete_user(user_id: str, auth: User = Depends(check_admin)):
     if auth.id == user_id:
