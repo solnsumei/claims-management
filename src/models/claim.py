@@ -22,7 +22,8 @@ class Claim(BaseModel):
 
     class Meta:
         table = 'claims'
-        unique_together = (('user_id', 'invoice_no'), )
+        unique_together = (('user_id', 'invoice_no'),)
+        ordering = ['claim_id']
 
     class PydanticMeta:
         allow_cycles = False

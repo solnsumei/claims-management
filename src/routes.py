@@ -1,6 +1,6 @@
 from fastapi import Depends
-from src.resources import auth, users, departments, projects, claims, user
-from src.utils.security import check_admin, get_current_user
+from src.resources import auth, users, departments, projects, claims, user, reports
+from src.utils.security import check_admin, get_current_user, check_admin_or_manager
 
 
 def add_routers(app, config):
@@ -32,6 +32,13 @@ def add_routers(app, config):
     )
 
     app.include_router(
+        reports.router,
+        prefix=f"{config.API_URL}/reports",
+        tags=["Reports"],
+        dependencies=[Depends(get_current_user)]
+    )
+
+    app.include_router(
         departments.router,
         prefix=f"{config.API_URL}/departments",
         tags=["Departments"],
@@ -42,12 +49,12 @@ def add_routers(app, config):
         projects.router,
         prefix=f"{config.API_URL}/projects",
         tags=["Projects"],
-        dependencies=[Depends(check_admin)]
+        dependencies=[Depends(check_admin_or_manager)]
     )
 
     app.include_router(
         users.router,
         prefix=f"{config.API_URL}/users",
         tags=["Users"],
-        dependencies=[Depends(check_admin)]
+        dependencies=[Depends(check_admin_or_manager)]
     )

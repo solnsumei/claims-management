@@ -12,7 +12,6 @@ CREATE TABLE IF NOT EXISTS `users` (
     `modified_at` DATETIME(6)   DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
     `status` VARCHAR(8) NOT NULL  COMMENT 'ACTIVE: active\nINACTIVE: inactive' DEFAULT 'active',
     `name` VARCHAR(50) NOT NULL,
-    `username` VARCHAR(30) NOT NULL UNIQUE,
     `email` VARCHAR(50) NOT NULL UNIQUE,
     `password` VARCHAR(250) NOT NULL,
     `is_admin` BOOL NOT NULL  DEFAULT 0,
@@ -50,15 +49,15 @@ CREATE TABLE IF NOT EXISTS `claims` (
     `payment_date` DATE,
     `due_date` DATE,
     `file_url` VARCHAR(255),
-    `status` VARCHAR(16) NOT NULL  COMMENT 'New: New\nPending: Pending\nInitial_Approval: Initial Approval\nApproved: Approved\nPaid: Paid\nCancelled: Cancelled' DEFAULT 'New',
+    `status` VARCHAR(9) NOT NULL  COMMENT 'New: New\nPending: Pending\nVerified: Verified\nApproved: Approved\nPaid: Paid\nCancelled: Cancelled' DEFAULT 'New',
     `remark` LONGTEXT,
+    `project_id` CHAR(36),
     `user_id` CHAR(36) NOT NULL,
     `department_id` CHAR(36),
-    `project_id` CHAR(36),
     UNIQUE KEY `uid_claims_user_id_398d2f` (`user_id`, `invoice_no`),
+    CONSTRAINT `fk_claims_projects_652d5db7` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`) ON DELETE SET NULL,
     CONSTRAINT `fk_claims_users_77a83080` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT,
-    CONSTRAINT `fk_claims_departme_d76e8ead` FOREIGN KEY (`department_id`) REFERENCES `departments` (`id`) ON DELETE SET NULL,
-    CONSTRAINT `fk_claims_projects_652d5db7` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`) ON DELETE SET NULL
+    CONSTRAINT `fk_claims_departme_d76e8ead` FOREIGN KEY (`department_id`) REFERENCES `departments` (`id`) ON DELETE SET NULL
 ) CHARACTER SET utf8mb4;
 CREATE TABLE IF NOT EXISTS `aerich` (
     `id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,

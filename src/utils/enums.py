@@ -8,15 +8,19 @@ class Status(str, Enum):
 
 class InvoiceUpdateAction(str, Enum):
     Approved = "Approved"
-    Initial_Approval = "Initial Approval"
     Paid = "Paid"
+    Cancelled = "Cancelled"
+
+
+class InvoiceVerifyAction(str, Enum):
+    Verified = "Verified"
     Cancelled = "Cancelled"
 
 
 class InvoiceStatus(str, Enum):
     New = "New"
     Pending = "Pending"
-    Initial_Approval = "Initial Approval"
+    Verified = "Verified"
     Approved = "Approved"
     Paid = "Paid"
     Cancelled = "Cancelled"
@@ -27,6 +31,10 @@ class Role(str, Enum):
     Manager = "Manager"
     Staff = "Staff"
     Contractor = "Contractor"
+
+
+class StaffRole(str, Enum):
+    Staff = "Staff"
 
 
 class EmployeeRole(str, Enum):

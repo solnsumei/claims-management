@@ -3,20 +3,24 @@ from typing import List
 from .baserouter import BaseRouter
 from src.models import User, UserWithDepartment, UserWithRelations
 from src.models.schema.user import CreateSchema, UpdateSchema
-from src.utils.security import check_admin
-from src.utils.exceptions import ForbiddenException, NotFoundException
+from src.utils.security import check_admin, check_admin_or_manager
+from src.utils.exceptions import ForbiddenException
 from src.services.mail_service import mail_service, create_welcome_message
-from src.utils.enums import EmployeeRole
-
+from src.utils.enums import EmployeeRole, Role, StaffRole, Status
 
 router = BaseRouter()
 
 
-@router.get("/", response_model=List[UserWithDepartment], dependencies=[Depends(check_admin)])
-async def fetch_all_staff(contractors: bool = False):
+@router.get("/", response_model=List[UserWithDepartment])
+async def fetch_all_staff(contractors: bool = False, auth: User = Depends(check_admin_or_manager)):
     employees_list = list(EmployeeRole)
+    non_admin_staff = list(StaffRole)
+
     if contractors:
         return await User.find_by("department", is_admin=False, role__not_in=employees_list)
+
+    if auth.role == Role.Manager:
+        return await User.find_by("department", is_admin=False, role__in=non_admin_staff)
     return await User.find_by("department", is_admin=False, role__in=employees_list)
 
 
@@ -25,9 +29,13 @@ async def get_user(user_id: str):
     return await UserWithRelations.from_queryset_single(User.get(is_admin=False, id=user_id))
 
 
-@router.post("/", status_code=201, response_model=UserWithDepartment,
-             dependencies=[Depends(check_admin)])
-async def add_user(user: CreateSchema, background_tasks: BackgroundTasks):
+@router.post("/", status_code=201, response_model=UserWithDepartment)
+async def add_user(user: CreateSchema, background_tasks: BackgroundTasks,
+                   auth: User = Depends(check_admin_or_manager)):
+
+    if auth.role == Role.Manager:
+        user.status = Status.INACTIVE
+
     password = user.password
     user.password = User.generate_hash(password)
     new_user = await User.create_one(user)

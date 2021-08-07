@@ -5,14 +5,16 @@ from fastapi import Depends
 from fastapi.security import HTTPBearer
 from src.config.settings import Settings as Config
 from src.models import User
-from src.utils.enums import Role
+from src.utils.enums import Role, Status
 from .exceptions import UnauthorisedException, ForbiddenException
 
 
 async def authenticate(username: str, password: str):
-    user = await User.find_by_username(username)
+    user = await User.find_by_email(username)
 
     if user and User.verify_hash(password, user.password):
+        if user.status != Status.ACTIVE:
+            raise UnauthorisedException("Your account is inactive, please contact your manager")
         return user
 
     raise UnauthorisedException("Username and/or password is incorrect")
@@ -38,7 +40,7 @@ def check_token(auth_token=Depends(HTTPBearer(
             algorithms=[Config.ALGORITHM]
         )
 
-        username: str = payload.get("username")
+        username: str = payload.get("email")
         if username is None:
             raise JWTError
     except JWTError:
@@ -52,7 +54,7 @@ async def get_current_user(username: str = Depends(check_token)):
     :param username:
     :return: User
     """
-    user = await User.find_by_username(username=username)
+    user = await User.find_by_email(username)
     if user is None:
         raise UnauthorisedException("Access token is invalid")
     return user

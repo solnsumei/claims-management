@@ -1,11 +1,11 @@
 from typing import Optional
 from pydantic import EmailStr, Field, UUID4
 from .baseschema import BaseSchema, StatusSchema, NameSchema
-from src.utils.enums import Role
+from src.utils.enums import Role, Status
 
 
 class AuthSchema(BaseSchema):
-    username: str
+    email: EmailStr
     password: str
 
 
@@ -17,10 +17,10 @@ class ChangePasswordSchema(BaseSchema):
 
 class CreateSchema(NameSchema):
     email: EmailStr
-    username: str = Field(..., min_length=3, max_length=30)
     password: str = Field(..., min_length=8, max_length=70)
     role: Optional[Role] = Field(Role.Staff)
     department_id: Optional[UUID4]
+    status:  Optional[Status] = Field(Status.INACTIVE)
 
 
 class UpdateSchema(StatusSchema):
@@ -29,3 +29,4 @@ class UpdateSchema(StatusSchema):
     password: str = Field(None, min_length=8, max_length=70)
     role: Optional[Role]
     department_id: Optional[UUID4]
+    status: Optional[Status]

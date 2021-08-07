@@ -12,9 +12,10 @@ router = BaseRouter()
 
 @router.post('/login')
 async def login_user(auth: AuthSchema):
-    user = await authenticate(auth.username, auth.password)
+    user = await authenticate(auth.email, auth.password)
     token = create_token({
-        "username": user.username,
+        "name": user.name,
+        "email": user.email,
         "isAdmin": user.is_admin,
         'role': user.role
     })
