@@ -13,11 +13,7 @@ from src.routes import add_routers
 def create_app(_config: Settings):
     _app = FastAPI()
 
-    origins = [
-        "http://localhost",
-        "http://localhost:3000",
-        "*"
-    ]
+    origins = ["*"]
 
     _app.add_middleware(
         CORSMiddleware,
