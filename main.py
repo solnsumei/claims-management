@@ -13,7 +13,12 @@ from src.routes import add_routers
 def create_app(_config: Settings):
     _app = FastAPI()
 
-    origins = ["*"]
+    origins = [
+        "http://anglestack-claims.herokuapp.com",
+        "https://anglestack-claims.herokuapp.com",
+        "http://localhost",
+        "http://localhost:3000",
+    ]
 
     _app.add_middleware(
         CORSMiddleware,
