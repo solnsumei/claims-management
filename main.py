@@ -9,24 +9,8 @@ from src.config.settings import Settings
 from src.config.db import init_db
 from src.routes import add_routers
 
-
 def create_app(_config: Settings):
     _app = FastAPI()
-
-    origins = [
-        "http://anglestack-claims.herokuapp.com",
-        "https://anglestack-claims.herokuapp.com",
-        "http://localhost",
-        "http://localhost:3000",
-    ]
-
-    _app.add_middleware(
-        CORSMiddleware,
-        allow_origins=origins,
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
 
     @_app.exception_handler(RequestValidationError)
     async def validation_exception_handler(request: Request, exc: RequestValidationError):
@@ -48,6 +32,21 @@ config = Settings.load_config()
 
 # Create app
 app = create_app(config)
+
+origins = [
+    "http://anglestack-claims.herokuapp.com",
+    "https://anglestack-claims.herokuapp.com",
+    "http://localhost",
+    "http://localhost:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.mount('/invoices', StaticFiles(directory="invoices"), name="static")
 
