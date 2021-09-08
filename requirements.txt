@@ -36,7 +36,7 @@ lxml==4.6.3
 MarkupSafe==2.0.1
 passlib==1.7.4
 pikepdf==2.16.1
-Pillow==8.3.1
+Pillow==8.3.2
 pyasn1==0.4.8
 pycparser==2.20
 pydantic==1.7.4
