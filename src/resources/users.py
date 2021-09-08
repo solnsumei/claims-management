@@ -57,11 +57,15 @@ async def update_user(user_id: str, user_schema: UpdateSchema, auth: User = Depe
     if found_user.is_admin and found_user.id != auth.id:
         raise ForbiddenException(message="You cannot update an admin")
 
+    if user_schema.password is not None and user_schema.password != '':
+        password = user_schema.password
+        user_schema.password = User.generate_hash(password)
+
     if auth.is_admin:
         updated_item = await User.update_one(user_id, user_schema)
         return await UserWithDepartment.from_queryset_single(updated_item)
 
-    if found_user.role == "Admin":
+    if found_user.role == "Admin" and found_user.id != auth.id:
         raise ForbiddenException(message="You cannot update an admin")
 
     updated_item = await User.update_one(user_id, user_schema)
